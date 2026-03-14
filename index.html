@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brio Solutions</title>
+  <meta name="description" content="Brio Solutions — Innovative Program and Construction Management. Now with AI-powered project intelligence." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --brio-orange: #E87722;
+      --brio-orange-dark: #c4611a;
+      --brio-navy: #1a2540;
+      --brio-navy-deep: #0f1729;
+      --brio-gray: #f4f4f2;
+      --brio-mid: #6b7280;
+      --brio-text: #1f2937;
+      --ai-teal: #0ea5a0;
+      --ai-teal-light: #e0fafa;
+      --ai-teal-mid: #0c8a86;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Barlow', sans-serif; color: var(--brio-text); background: #fff; }
+
+    /* ── PAGE SWITCHING ── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--brio-navy-deep);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; position: sticky; top: 0; z-index: 200;
+      border-bottom: 3px solid var(--brio-orange);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; padding: 1rem 0;
+    }
+    .nav-logo-mark {
+      width: 42px; height: 42px; background: var(--brio-orange);
+      border-radius: 4px; display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-mark svg { width: 26px; height: 26px; fill: #fff; }
+    .nav-logo-text { font-family: 'Barlow Condensed', sans-serif; font-size: 1.4rem; font-weight: 700; color: #fff; letter-spacing: 0.04em; }
+    .nav-logo-text span { color: var(--brio-orange); }
+
+    .nav-links { display: flex; list-style: none; height: 100%; }
+    .nav-links li { position: relative; }
+    .nav-links a {
+      display: flex; align-items: center; height: 100%;
+      padding: 1.1rem 1.1rem; font-size: 0.82rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: rgba(255,255,255,0.78); text-decoration: none;
+      transition: color 0.2s; white-space: nowrap; cursor: pointer;
+      border-bottom: 3px solid transparent; margin-bottom: -3px;
+    }
+    .nav-links a:hover { color: #fff; border-bottom-color: var(--brio-orange); }
+    .nav-links a.active { color: #fff; border-bottom-color: var(--brio-orange); }
+    .nav-links a.nav-ai-link {
+      color: var(--ai-teal); position: relative;
+    }
+    .nav-links a.nav-ai-link::before {
+      content: '✦'; font-size: 0.55rem; margin-right: 5px; animation: sparkle 2s ease-in-out infinite;
+    }
+    @keyframes sparkle { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .nav-links a.nav-ai-link:hover, .nav-links a.nav-ai-link.active { color: #fff; border-bottom-color: var(--ai-teal); }
+
+    /* ══════════════════════════════════
+       HOME PAGE
+    ══════════════════════════════════ */
+
+    /* HERO SLIDER */
+    .hero-slider { position: relative; height: 92vh; min-height: 540px; overflow: hidden; background: var(--brio-navy-deep); }
+    .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s ease; display: flex; align-items: center; }
+    .slide.active { opacity: 1; }
+    .slide-bg {
+      position: absolute; inset: 0; background-size: cover; background-position: center;
+      filter: brightness(0.35);
+    }
+    .slide-1 .slide-bg { background-image: linear-gradient(135deg, #0f1729 0%, #1a3a5c 50%, #0f2a1a 100%); filter: none; }
+    .slide-2 .slide-bg { background-image: linear-gradient(135deg, #1a2540 0%, #2a1a40 50%, #1a3030 100%); filter: none; }
+    .slide-3 .slide-bg { background-image: linear-gradient(135deg, #0f2030 0%, #1a1a40 50%, #2a1a10 100%); filter: none; }
+    .slide-content { position: relative; z-index: 2; padding: 0 8%; max-width: 820px; }
+    .slide-tag { display: inline-block; background: var(--brio-orange); color: #fff; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 5px 14px; border-radius: 2px; margin-bottom: 1.5rem; }
+    .slide-content h1 { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2.8rem, 6vw, 5rem); font-weight: 700; color: #fff; line-height: 1.02; margin-bottom: 1.25rem; text-transform: uppercase; letter-spacing: 0.02em; }
+    .slide-content h1 em { font-style: normal; color: var(--brio-orange); }
+    .slide-content p { font-size: 1.1rem; color: rgba(255,255,255,0.75); line-height: 1.7; max-width: 560px; margin-bottom: 2rem; font-weight: 300; }
+    .slide-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-orange { background: var(--brio-orange); color: #fff; padding: 0.8rem 2rem; border-radius: 3px; font-size: 0.88rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; border: none; font-family: 'Barlow', sans-serif; transition: background 0.2s; }
+    .btn-orange:hover { background: var(--brio-orange-dark); }
+    .btn-outline-white { background: transparent; color: #fff; padding: 0.8rem 2rem; border-radius: 3px; font-size: 0.88rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; border: 2px solid rgba(255,255,255,0.4); font-family: 'Barlow', sans-serif; transition: all 0.2s; }
+    .btn-outline-white:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
+
+    .slider-dots { position: absolute; bottom: 2rem; left: 8%; display: flex; gap: 8px; z-index: 10; }
+    .dot { width: 28px; height: 3px; background: rgba(255,255,255,0.3); border-radius: 2px; cursor: pointer; transition: background 0.3s; }
+    .dot.active { background: var(--brio-orange); }
+
+    /* PILLARS */
+    .pillars { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--brio-navy); }
+    .pillar { padding: 2.5rem 2rem; border-right: 0.5px solid rgba(255,255,255,0.08); transition: background 0.2s; }
+    .pillar:last-child { border-right: none; }
+    .pillar:hover { background: rgba(255,255,255,0.04); }
+    .pillar-icon { width: 48px; height: 48px; margin-bottom: 1.25rem; }
+    .pillar-icon svg { width: 48px; height: 48px; }
+    .pillar h3 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.15rem; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.6rem; }
+    .pillar p { font-size: 0.88rem; color: rgba(255,255,255,0.55); line-height: 1.65; font-weight: 300; }
+
+    /* ABOUT STRIP */
+    .about-strip { padding: 5rem 8%; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; background: #fff; }
+    .about-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--brio-orange); margin-bottom: 0.75rem; }
+    .about-strip h2 { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2rem, 3.5vw, 2.8rem); font-weight: 700; color: var(--brio-navy); text-transform: uppercase; line-height: 1.1; margin-bottom: 1.25rem; }
+    .about-strip p { font-size: 0.97rem; color: var(--brio-mid); line-height: 1.8; font-weight: 300; margin-bottom: 1rem; }
+    .about-right { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    .stat-box { background: var(--brio-gray); padding: 1.75rem 1.5rem; border-left: 4px solid var(--brio-orange); border-radius: 0 4px 4px 0; }
+    .stat-box .num { font-family: 'Barlow Condensed', sans-serif; font-size: 2.4rem; font-weight: 700; color: var(--brio-navy); line-height: 1; }
+    .stat-box .lbl { font-size: 0.8rem; color: var(--brio-mid); margin-top: 4px; font-weight: 400; }
+
+    /* SERVICES GRID */
+    .services-section { padding: 5rem 8%; background: var(--brio-gray); }
+    .services-section .sec-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--brio-orange); margin-bottom: 0.6rem; }
+    .services-section h2 { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2rem, 3.5vw, 2.8rem); font-weight: 700; color: var(--brio-navy); text-transform: uppercase; line-height: 1.1; margin-bottom: 2.5rem; }
+    .svc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; }
+    .svc-card { background: #fff; padding: 2rem; border-radius: 4px; border-top: 4px solid var(--brio-orange); transition: transform 0.2s, box-shadow 0.2s; }
+    .svc-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.08); }
+    .svc-card h4 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--brio-navy); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.75rem; }
+    .svc-card p { font-size: 0.875rem; color: var(--brio-mid); line-height: 1.65; font-weight: 300; }
+
+    /* CERTS */
+    .certs { padding: 3.5rem 8%; background: var(--brio-navy-deep); display: flex; align-items: center; gap: 3rem; flex-wrap: wrap; }
+    .certs-label { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 600; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.1em; white-space: nowrap; }
+    .cert-badge { background: rgba(255,255,255,0.06); border: 0.5px solid rgba(255,255,255,0.12); border-radius: 4px; padding: 0.75rem 1.5rem; text-align: center; }
+    .cert-badge .cert-title { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--brio-orange); }
+    .cert-badge .cert-sub { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+    /* CTA STRIP */
+    .cta-strip { background: var(--brio-orange); padding: 4rem 8%; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+    .cta-strip h3 { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: #fff; text-transform: uppercase; line-height: 1.1; }
+    .cta-strip p { color: rgba(255,255,255,0.85); font-size: 0.95rem; margin-top: 0.4rem; font-weight: 300; }
+    .btn-white { background: #fff; color: var(--brio-orange); padding: 0.85rem 2.25rem; border-radius: 3px; font-size: 0.88rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; border: none; font-family: 'Barlow', sans-serif; transition: all 0.2s; white-space: nowrap; }
+    .btn-white:hover { background: var(--brio-navy); color: #fff; }
+
+    /* ══════════════════════════════════
+       AI SOLUTIONS PAGE
+    ══════════════════════════════════ */
+
+    /* AI HERO */
+    .ai-hero {
+      background: var(--brio-navy-deep); min-height: 75vh;
+      display: flex; align-items: center; padding: 6rem 8%;
+      position: relative; overflow: hidden;
+    }
+    .ai-hero::before {
+      content: ''; position: absolute; right: -120px; top: -120px;
+      width: 650px; height: 650px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(14,165,160,0.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .ai-hero::after {
+      content: ''; position: absolute; left: 45%; bottom: -80px;
+      width: 400px; height: 400px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(232,119,34,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .ai-hero-inner { position: relative; z-index: 2; max-width: 760px; }
+    .ai-hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(14,165,160,0.15); color: var(--ai-teal);
+      font-size: 0.75rem; font-weight: 600; padding: 0.4rem 1rem;
+      border-radius: 100px; margin-bottom: 1.75rem;
+      border: 0.5px solid rgba(14,165,160,0.4); letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .ai-hero-badge::before { content: '✦'; font-size: 0.6rem; animation: sparkle 2s ease-in-out infinite; }
+    .ai-hero h1 { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2.8rem, 5.5vw, 4.5rem); font-weight: 700; color: #fff; text-transform: uppercase; line-height: 1.02; letter-spacing: 0.02em; margin-bottom: 1.4rem; }
+    .ai-hero h1 em { font-style: normal; color: var(--ai-teal); }
+    .ai-hero-sub { font-size: 1.1rem; color: rgba(255,255,255,0.65); line-height: 1.78; max-width: 600px; font-weight: 300; margin-bottom: 2.25rem; }
+    .ai-hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-teal { background: var(--ai-teal); color: #fff; padding: 0.85rem 2rem; border-radius: 3px; font-size: 0.88rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; border: none; font-family: 'Barlow', sans-serif; transition: background 0.2s; }
+    .btn-teal:hover { background: var(--ai-teal-mid); }
+    .ai-hero-stats { display: flex; gap: 3rem; margin-top: 3.5rem; padding-top: 2.5rem; border-top: 0.5px solid rgba(255,255,255,0.1); flex-wrap: wrap; }
+    .ai-stat-num { font-family: 'Barlow Condensed', sans-serif; font-size: 2.2rem; font-weight: 700; color: var(--ai-teal); }
+    .ai-stat-label { font-size: 0.78rem; color: rgba(255,255,255,0.45); margin-top: 3px; }
+
+    /* BEFORE / AFTER */
+    .before-after { padding: 6rem 8%; background: #fff; }
+    .ba-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--brio-orange); margin-bottom: 0.75rem; }
+    .before-after h2 { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(1.9rem, 3.5vw, 2.8rem); font-weight: 700; color: var(--brio-navy); text-transform: uppercase; line-height: 1.08; margin-bottom: 0.75rem; }
+    .before-after .ba-intro { color: var(--brio-mid); font-size: 1rem; line-height: 1.75; font-weight: 300; max-width: 560px; margin-bottom: 3rem; }
+    .ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .ba-col-head { font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid; }
+    .ba-before .ba-col-head { color: #b91c1c; border-color: #fecaca; }
+    .ba-after .ba-col-head { color: var(--ai-teal-mid); border-color: rgba(14,165,160,0.25); }
+    .ba-item { display: flex; gap: 0.85rem; align-items: flex-start; padding: 1rem 1.1rem; border-radius: 6px; margin-bottom: 0.75rem; }
+    .ba-before .ba-item { background: #fff5f5; }
+    .ba-after .ba-item { background: #f0fdfc; }
+    .ba-icon { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; font-size: 0.75rem; font-weight: 700; }
+    .ba-before .ba-icon { background: #fecaca; color: #b91c1c; }
+    .ba-after .ba-icon { background: rgba(14,165,160,0.2); color: var(--ai-teal-mid); }
+    .ba-item p { font-size: 0.9rem; color: var(--brio-text); line-height: 1.55; font-weight: 400; }
+
+    /* HOW IT HELPS */
+    .how-section { padding: 6rem 8%; background: var(--brio-gray); }
+    .how-section .sec-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--brio-orange); margin-bottom: 0.6rem; }
+    .how-section h2 { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(1.9rem, 3.5vw, 2.8rem); font-weight: 700; color: var(--brio-navy); text-transform: uppercase; line-height: 1.08; margin-bottom: 0.75rem; }
+    .how-section .how-intro { color: var(--brio-mid); font-size: 1rem; line-height: 1.75; font-weight: 300; max-width: 540px; margin-bottom: 3rem; }
+    .how-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; }
+    .how-card { background: #fff; border-radius: 4px; border-top: 4px solid var(--ai-teal); padding: 2rem; transition: transform 0.2s, box-shadow 0.2s; }
+    .how-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.07); }
+    .how-card-icon { width: 46px; height: 46px; background: var(--ai-teal-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.1rem; }
+    .how-card-icon svg { width: 22px; height: 22px; stroke: var(--ai-teal-mid); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .how-card h4 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--brio-navy); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.6rem; }
+    .how-card .plain-english { display: inline-block; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ai-teal-mid); background: var(--ai-teal-light); padding: 2px 8px; border-radius: 100px; margin-bottom: 0.65rem; }
+    .how-card p { font-size: 0.88rem; color: var(--brio-mid); line-height: 1.65; font-weight: 300; }
+
+    /* DAY IN THE LIFE */
+    .day-life { padding: 6rem 8%; background: var(--brio-navy-deep); }
+    .day-life .sec-label { color: var(--ai-teal); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.6rem; }
+    .day-life h2 { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(1.9rem, 3.5vw, 2.8rem); font-weight: 700; color: #fff; text-transform: uppercase; line-height: 1.08; margin-bottom: 0.75rem; }
+    .day-life .dl-intro { color: rgba(255,255,255,0.55); font-size: 1rem; line-height: 1.75; font-weight: 300; max-width: 520px; margin-bottom: 3rem; }
+    .timeline { display: flex; flex-direction: column; gap: 0; max-width: 720px; }
+    .tl-item { display: flex; gap: 2rem; position: relative; }
+    .tl-item:not(:last-child) .tl-line { width: 2px; background: rgba(14,165,160,0.25); flex-shrink: 0; margin: 0 auto; position: absolute; left: 23px; top: 46px; bottom: -1.5rem; }
+    .tl-left { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; padding-top: 4px; }
+    .tl-dot { width: 46px; height: 46px; border-radius: 50%; background: rgba(14,165,160,0.15); border: 2px solid var(--ai-teal); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .tl-dot svg { width: 18px; height: 18px; stroke: var(--ai-teal); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .tl-right { padding-bottom: 2.5rem; padding-left: 0.5rem; }
+    .tl-time { font-size: 0.72rem; font-weight: 700; color: var(--ai-teal); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .tl-right h4 { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.4rem; }
+    .tl-right p { font-size: 0.9rem; color: rgba(255,255,255,0.55); line-height: 1.65; font-weight: 300; }
+    .tl-sample {
+      margin-top: 0.85rem; background: rgba(255,255,255,0.05);
+      border: 0.5px solid rgba(14,165,160,0.25); border-radius: 6px;
+      padding: 0.85rem 1rem; font-size: 0.83rem; color: rgba(255,255,255,0.7);
+      line-height: 1.6; font-style: italic;
+    }
+    .tl-sample strong { color: var(--ai-teal); font-style: normal; font-weight: 500; }
+
+    /* USE CASES */
+    .use-cases { padding: 6rem 8%; background: #fff; }
+    .use-cases .sec-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--brio-orange); margin-bottom: 0.6rem; }
+    .use-cases h2 { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(1.9rem, 3.5vw, 2.8rem); font-weight: 700; color: var(--brio-navy); text-transform: uppercase; line-height: 1.08; margin-bottom: 0.75rem; }
+    .use-cases .uc-intro { color: var(--brio-mid); font-size: 1rem; line-height: 1.75; font-weight: 300; max-width: 540px; margin-bottom: 3rem; }
+    .uc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .uc-card { border: 0.5px solid #e5e7eb; border-radius: 6px; overflow: hidden; transition: box-shadow 0.2s; }
+    .uc-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.08); }
+    .uc-card-head { background: var(--brio-navy); padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
+    .uc-card-head svg { width: 20px; height: 20px; stroke: var(--ai-teal); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .uc-card-head h4 { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; }
+    .uc-card-body { padding: 1.25rem 1.5rem; }
+    .uc-card-body p { font-size: 0.88rem; color: var(--brio-mid); line-height: 1.65; font-weight: 300; margin-bottom: 0.9rem; }
+    .uc-result { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.85rem; font-weight: 500; color: var(--ai-teal-mid); }
+    .uc-result::before { content: '→'; flex-shrink: 0; }
+
+    /* POWERED BY */
+    .powered-by { background: var(--brio-gray); padding: 3rem 8%; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; border-top: 0.5px solid #e5e7eb; }
+    .pb-left { font-size: 0.8rem; color: var(--brio-mid); font-weight: 300; }
+    .pb-left strong { color: var(--brio-navy); font-weight: 600; display: block; font-size: 0.9rem; margin-bottom: 3px; }
+    .pb-badge { display: flex; align-items: center; gap: 10px; background: var(--brio-navy-deep); padding: 0.75rem 1.5rem; border-radius: 4px; border: 0.5px solid rgba(14,165,160,0.3); }
+    .pb-badge span { font-family: 'Barlow Condensed', sans-serif; font-size: 0.9rem; font-weight: 700; color: #fff; letter-spacing: 0.06em; text-transform: uppercase; }
+    .pb-badge span em { font-style: normal; color: var(--ai-teal); }
+    .pb-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ai-teal); animation: pulse-dot 2s ease-in-out infinite; }
+    @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+
+    /* AI CTA */
+    .ai-cta { background: var(--ai-teal-mid); padding: 5rem 8%; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+    .ai-cta h3 { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 700; color: #fff; text-transform: uppercase; line-height: 1.08; }
+    .ai-cta p { color: rgba(255,255,255,0.8); font-size: 0.97rem; margin-top: 0.5rem; font-weight: 300; }
+
+    /* SHARED FOOTER */
+    footer { background: var(--brio-navy-deep); padding: 2.5rem 8%; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; border-top: 3px solid var(--brio-orange); }
+    .footer-logo { font-family: 'Barlow Condensed', sans-serif; font-size: 1.2rem; font-weight: 700; color: #fff; letter-spacing: 0.04em; }
+    .footer-logo span { color: var(--brio-orange); }
+    footer p { font-size: 0.78rem; color: rgba(255,255,255,0.35); }
+    footer a { color: rgba(255,255,255,0.45); text-decoration: none; font-size: 0.78rem; transition: color 0.2s; }
+    footer a:hover { color: var(--brio-orange); }
+
+    /* RESPONSIVE */
+    @media (max-width: 860px) {
+      .ba-grid { grid-template-columns: 1fr; }
+      .about-strip { grid-template-columns: 1fr; gap: 2.5rem; }
+      .pillars { grid-template-columns: 1fr; }
+      .pillar { border-right: none; border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+    }
+    @media (max-width: 640px) {
+      .nav-links a { padding: 1rem 0.65rem; font-size: 0.75rem; }
+      section, .ai-hero, .before-after, .how-section, .day-life, .use-cases { padding-left: 5%; padding-right: 5%; }
+      .about-strip, .services-section, .certs, .cta-strip, .powered-by, .ai-cta, footer { padding-left: 5%; padding-right: 5%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <a class="nav-logo" onclick="showPage('home')">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <div class="nav-logo-text">BRIO <span>SOLUTIONS</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')" id="nav-home" class="active">Home</a></li>
+    <li><a onclick="showPage('home')" id="nav-services">Services</a></li>
+    <li><a onclick="showPage('home')" id="nav-projects">Projects</a></li>
+    <li><a onclick="showPage('ai')" id="nav-ai" class="nav-ai-link">AI Solutions</a></li>
+    <li><a onclick="scrollToContact()" id="nav-contact">Get in Touch</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════════════════════════════
+     HOME PAGE
+═══════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO SLIDER -->
+  <div class="hero-slider">
+    <div class="slide active slide-1">
+      <div class="slide-bg"></div>
+      <div class="slide-content">
+        <div class="slide-tag">Program &amp; Construction Management</div>
+        <h1>Innovative<br/>Approach to<br/><em>Project Delivery</em></h1>
+        <p>Brio Solutions brings cutting-edge technology and proven strategies to every project — from planning through completion.</p>
+        <div class="slide-actions">
+          <button class="btn-orange" onclick="scrollToContact()">Get in touch</button>
+          <button class="btn-outline-white" onclick="showPage('ai')">See our AI solutions</button>
+        </div>
+      </div>
+    </div>
+    <div class="slide slide-2">
+      <div class="slide-bg"></div>
+      <div class="slide-content">
+        <div class="slide-tag">Scalable Solutions</div>
+        <h1>Designed for<br/>Projects of<br/><em>Any Scale</em></h1>
+        <p>Our solutions are customized for the project needs and are scalable to all sizes — from small builds to major infrastructure programs.</p>
+        <div class="slide-actions">
+          <button class="btn-orange" onclick="scrollToContact()">Get in touch</button>
+        </div>
+      </div>
+    </div>
+    <div class="slide slide-3">
+      <div class="slide-bg"></div>
+      <div class="slide-content">
+        <div class="slide-tag">Effective Strategies</div>
+        <h1>Your Goals.<br/>Our<br/><em>Expertise.</em></h1>
+        <p>We help our clients reach their project goals by providing customized solutions using effective strategies and sound project controls practices.</p>
+        <div class="slide-actions">
+          <button class="btn-orange" onclick="scrollToContact()">Get in touch</button>
+        </div>
+      </div>
+    </div>
+    <div class="slider-dots">
+      <div class="dot active" onclick="goSlide(0)"></div>
+      <div class="dot" onclick="goSlide(1)"></div>
+      <div class="dot" onclick="goSlide(2)"></div>
+    </div>
+  </div>
+
+  <!-- PILLARS -->
+  <div class="pillars">
+    <div class="pillar">
+      <div class="pillar-icon">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="24" cy="24" r="20" stroke="#E87722" stroke-width="2.5"/>
+          <path d="M16 24l6 6 10-12" stroke="#E87722" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h3>Customized Solutions</h3>
+      <p>Our trained professionals assist in delivering your project with solutions tailored to your exact requirements.</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="8" width="32" height="32" rx="4" stroke="#E87722" stroke-width="2.5"/>
+          <path d="M16 24h16M24 16v16" stroke="#E87722" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3>Integrated Approach</h3>
+      <p>We identify all components of the project and adopt an integrated approach to design the most efficient solution.</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">
+        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 40V20l16-12 16 12v20" stroke="#E87722" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="18" y="28" width="12" height="12" rx="1" stroke="#E87722" stroke-width="2.5"/>
+        </svg>
+      </div>
+      <h3>Staff Augmentation</h3>
+      <p>Project Controls, PM, PMIS, Scheduling, Cost Engineering, Document Control, and IT services — on demand.</p>
+    </div>
+  </div>
+
+  <!-- ABOUT STRIP -->
+  <div class="about-strip">
+    <div>
+      <div class="about-label">Who We Are</div>
+      <h2>Built on Experience.<br/>Driven by Results.</h2>
+      <p>Brio Solutions is a certified DBE/SBE firm specializing in Program and Construction Management. We believe in using the latest technology and innovative approaches to deliver projects on time and on budget.</p>
+      <p>From small municipal contracts to large infrastructure programs, our team brings deep expertise and a commitment to excellence on every engagement.</p>
+      <button class="btn-orange" style="margin-top:1.5rem" onclick="scrollToContact()">Work with us</button>
+    </div>
+    <div class="about-right">
+      <div class="stat-box">
+        <div class="num">DBE</div>
+        <div class="lbl">Disadvantaged Business Enterprise certified</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">SBE</div>
+        <div class="lbl">Small Business Enterprise certified</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">SB</div>
+        <div class="lbl">CA DGS Small Business (Micro) certified</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">AI</div>
+        <div class="lbl">Now offering AI-powered project intelligence</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <div class="services-section" id="services">
+    <div class="sec-label">What We Do</div>
+    <h2>Our Services</h2>
+    <div class="svc-grid">
+      <div class="svc-card">
+        <h4>Project Management</h4>
+        <p>End-to-end project leadership with proven methodologies that keep your projects on schedule and within budget.</p>
+      </div>
+      <div class="svc-card">
+        <h4>PMIS Implementation</h4>
+        <p>Selection, configuration, and deployment of Project Management Information Systems tailored to your workflow.</p>
+      </div>
+      <div class="svc-card">
+        <h4>Project Controls</h4>
+        <p>Cost engineering, scheduling, and performance tracking to give you real-time visibility into project health.</p>
+      </div>
+      <div class="svc-card">
+        <h4>Construction Management</h4>
+        <p>On-site and program-level construction oversight to ensure quality, safety, and delivery standards are met.</p>
+      </div>
+      <div class="svc-card">
+        <h4>Risk Management</h4>
+        <p>Proactive identification, analysis, and mitigation of project risks before they become costly problems.</p>
+      </div>
+      <div class="svc-card" style="border-top-color: var(--ai-teal); cursor:pointer;" onclick="showPage('ai')">
+        <h4 style="color:var(--ai-teal-mid);">✦ AI Solutions <span style="font-size:0.7rem;background:var(--ai-teal-light);color:var(--ai-teal-mid);padding:2px 8px;border-radius:100px;letter-spacing:0.06em;font-weight:600;margin-left:4px;">New</span></h4>
+        <p>AI-powered project intelligence that catches issues early, generates plain-English reports, and keeps your team one step ahead.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CERTS -->
+  <div class="certs">
+    <div class="certs-label">Certifications</div>
+    <div class="cert-badge"><div class="cert-title">DBE / SBE</div><div class="cert-sub">Disadvantaged &amp; Small Business Enterprise</div></div>
+    <div class="cert-badge"><div class="cert-title">SB (Micro)</div><div class="cert-sub">CA DGS Small Business Micro</div></div>
+  </div>
+
+  <!-- CTA STRIP -->
+  <div class="cta-strip" id="contact">
+    <div>
+      <h3>Ready to start your next project?</h3>
+      <p>Let's talk about how Brio Solutions can help you deliver on time and on budget.</p>
+    </div>
+    <button class="btn-white" onclick="alert('Contact form coming soon!')">Get in Touch</button>
+  </div>
+
+</div><!-- /page-home -->
+
+
+<!-- ═══════════════════════════════════════
+     AI SOLUTIONS PAGE
+═══════════════════════════════════════ -->
+<div class="page" id="page-ai">
+
+  <!-- AI HERO -->
+  <div class="ai-hero">
+    <div class="ai-hero-inner">
+      <div class="ai-hero-badge">✦ New from Brio Solutions</div>
+      <h1>Your Projects.<br/><em>Smarter.</em><br/>Every Day.</h1>
+      <p class="ai-hero-sub">What if your project data could flag problems before they become delays? What if your team got a clear, jargon-free summary every morning — no spreadsheets, no chasing updates? That's what Brio's AI Solutions does for construction and program teams.</p>
+      <div class="ai-hero-actions">
+        <button class="btn-teal" onclick="scrollToContact()">Book a free demo</button>
+        <button class="btn-outline-white" onclick="document.getElementById('how-it-helps').scrollIntoView({behavior:'smooth'})">See how it works</button>
+      </div>
+      <div class="ai-hero-stats">
+        <div>
+          <div class="ai-stat-num">Daily</div>
+          <div class="ai-stat-label">Plain-English project reports</div>
+        </div>
+        <div>
+          <div class="ai-stat-num">24/7</div>
+          <div class="ai-stat-label">Automated issue monitoring</div>
+        </div>
+        <div>
+          <div class="ai-stat-num">Zero</div>
+          <div class="ai-stat-label">Dashboards to babysit</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BEFORE / AFTER -->
+  <div class="before-after">
+    <div class="ba-label">The difference it makes</div>
+    <h2>Managing Projects<br/>Before &amp; After AI</h2>
+    <p class="ba-intro">You don't need to understand AI to benefit from it. Here's what changes when your project data starts working for you.</p>
+    <div class="ba-grid">
+      <div class="ba-col">
+        <div class="ba-col-head ba-before">Without AI Solutions</div>
+        <div class="ba-item ba-before"><div class="ba-icon ba-before">✕</div><p>You find out a schedule is slipping when it's already too late to course-correct.</p></div>
+        <div class="ba-item ba-before"><div class="ba-icon ba-before">✕</div><p>Your team spends hours pulling together status reports from scattered spreadsheets.</p></div>
+        <div class="ba-item ba-before"><div class="ba-icon ba-before">✕</div><p>Budget overruns surface in monthly reviews — weeks after the damage is done.</p></div>
+        <div class="ba-item ba-before"><div class="ba-icon ba-before">✕</div><p>Leadership asks for a project update and it takes a day to compile the answer.</p></div>
+        <div class="ba-item ba-before"><div class="ba-icon ba-before">✕</div><p>Risk logs are updated manually — and often not updated at all.</p></div>
+      </div>
+      <div class="ba-col">
+        <div class="ba-col-head ba-after">With Brio AI Solutions</div>
+        <div class="ba-item ba-after"><div class="ba-icon ba-after">✓</div><p>Potential delays are flagged automatically — days before they affect your timeline.</p></div>
+        <div class="ba-item ba-after"><div class="ba-icon ba-after">✓</div><p>Every morning, your team gets a plain-English summary of what's on track and what needs attention.</p></div>
+        <div class="ba-item ba-after"><div class="ba-icon ba-after">✓</div><p>Cost trends are tracked continuously — you see warning signs weeks in advance.</p></div>
+        <div class="ba-item ba-after"><div class="ba-icon ba-after">✓</div><p>Leadership reports are generated automatically — ready before your morning coffee.</p></div>
+        <div class="ba-item ba-after"><div class="ba-icon ba-after">✓</div><p>Risks are monitored and updated in the background — without anyone lifting a finger.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT HELPS -->
+  <div class="how-section" id="how-it-helps">
+    <div class="sec-label">How it works</div>
+    <h2>What Brio AI Does<br/>For Your Team</h2>
+    <p class="how-intro">No training required. No new software to learn. It plugs into your existing project data and gets to work.</p>
+    <div class="how-cards">
+      <div class="how-card">
+        <div class="how-card-icon">
+          <svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        </div>
+        <div class="plain-english">What you'll see</div>
+        <h4>Early Warning System</h4>
+        <p>Our AI watches your project data around the clock. The moment something looks off — a cost trending high, a milestone at risk — you get an alert in plain English, not a data report.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M7 21h10M12 17v4"/></svg>
+        </div>
+        <div class="plain-english">What you'll see</div>
+        <h4>Morning Project Briefings</h4>
+        <p>Think of it as a daily memo written by a project controls expert — delivered to your inbox every morning, covering what's healthy, what needs your attention, and what to watch.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <div class="plain-english">What you'll see</div>
+        <h4>Instant Status Answers</h4>
+        <p>When leadership asks "where do we stand?", you have the answer ready. Reports are auto-generated in a format anyone can understand — no charts to decipher, no analyst needed.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="plain-english">What you'll see</div>
+        <h4>Risk Radar</h4>
+        <p>Risks don't wait for monthly meetings. Our system continuously scans for patterns that have historically caused project problems — and flags them before they escalate.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-icon">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="plain-english">What you'll see</div>
+        <h4>Team Alignment at a Glance</h4>
+        <p>Everyone on the project — from field supervisors to executives — sees the same picture. No more conflicting updates, no more "I didn't know about that" moments.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-card-icon">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="plain-english">What you'll see</div>
+        <h4>Trend Spotting</h4>
+        <p>Is productivity slowing on a specific phase? Are change orders clustering around one subcontractor? The AI spots trends your team would miss in the day-to-day noise.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAY IN THE LIFE -->
+  <div class="day-life">
+    <div class="sec-label">A day in the life</div>
+    <h2>Your Morning,<br/>With Brio AI</h2>
+    <p class="dl-intro">Here's what a typical day looks like when AI is quietly working in the background for your project team.</p>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-dot">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          </div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-right">
+          <div class="tl-time">7:00 AM</div>
+          <h4>Your daily briefing arrives</h4>
+          <p>Before you've finished your first coffee, a clear project summary lands in your inbox — written in plain English, not data-speak.</p>
+          <div class="tl-sample">"<strong>Highway 18 Widening:</strong> Schedule is on track. Concrete pour for Pier 4 completed yesterday — ahead of plan by 2 days. Watch item: material delivery for Phase 2B is showing a possible 4-day delay. No action needed today, but worth a call to the supplier this week."</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-dot">
+            <svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          </div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-right">
+          <div class="tl-time">9:30 AM</div>
+          <h4>A cost alert comes in</h4>
+          <p>The AI notices a spending pattern that looks like it could push one work package over budget — and tells you now, not at month-end.</p>
+          <div class="tl-sample">"<strong>Budget Alert — Electrical Package:</strong> Spending in this package is running 8% above the projected rate for this stage. At the current pace, the contingency buffer may be reached by week 6. Recommend reviewing with your cost engineer."</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-dot">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          </div>
+          <div class="tl-line"></div>
+        </div>
+        <div class="tl-right">
+          <div class="tl-time">2:00 PM</div>
+          <h4>Leadership asks for a status update</h4>
+          <p>Instead of pulling a team together to compile a report, you forward the auto-generated executive summary. Done in 30 seconds.</p>
+          <div class="tl-sample">"<strong>Executive Summary — Week 14:</strong> 3 of 4 active projects are on schedule and within budget. One project (Civic Center Retrofit) has a flagged risk around permit timing — mitigation steps are underway. Overall program health: <strong style='color:#68D391;'>Good.</strong>"</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left">
+          <div class="tl-dot">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+        </div>
+        <div class="tl-right">
+          <div class="tl-time">End of day</div>
+          <h4>You leave knowing what tomorrow holds</h4>
+          <p>No surprises waiting Monday morning. Your AI has been watching all day — and will send tomorrow's briefing before you arrive.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- USE CASES -->
+  <div class="use-cases">
+    <div class="sec-label">Real-world applications</div>
+    <h2>Where Construction<br/>Teams Use It Most</h2>
+    <p class="uc-intro">You don't need a data team to get value from AI. These are the problems it solves out of the box.</p>
+    <div class="uc-grid">
+      <div class="uc-card">
+        <div class="uc-card-head">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <h4>Schedule Monitoring</h4>
+        </div>
+        <div class="uc-card-body">
+          <p>Your project schedule is compared against actual progress daily. If a milestone is at risk, you know within hours — not at the next progress meeting.</p>
+          <div class="uc-result">Fewer schedule overruns. More time to course-correct.</div>
+        </div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-card-head">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <h4>Budget Tracking</h4>
+        </div>
+        <div class="uc-card-body">
+          <p>Cost data is monitored continuously. The AI learns what "normal" spending looks like for your project type and flags when things start drifting.</p>
+          <div class="uc-result">Catch overruns weeks before month-end reviews.</div>
+        </div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-card-head">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <h4>Reporting for Stakeholders</h4>
+        </div>
+        <div class="uc-card-body">
+          <p>Weekly and monthly reports for owners, agencies, and leadership are generated automatically — formatted, professional, and ready to send.</p>
+          <div class="uc-result">Hours saved per week. Consistent, credible reporting.</div>
+        </div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-card-head">
+          <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <h4>Risk &amp; Issue Tracking</h4>
+        </div>
+        <div class="uc-card-body">
+          <p>Open risks and issues are tracked in real time. The AI summarizes which ones need your attention today versus which can wait — so nothing slips through.</p>
+          <div class="uc-result">No more risk logs that nobody reads.</div>
+        </div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-card-head">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <h4>Performance Trends</h4>
+        </div>
+        <div class="uc-card-body">
+          <p>Is a subcontractor's productivity declining? Is one phase consistently running over? The AI connects dots across your project history that are impossible to see manually.</p>
+          <div class="uc-result">Data-backed conversations with your team and vendors.</div>
+        </div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-card-head">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <h4>Owner &amp; Agency Updates</h4>
+        </div>
+        <div class="uc-card-body">
+          <p>Keeping owners and agencies informed is time-consuming. AI drafts your update emails and briefing documents, ready for your review and send.</p>
+          <div class="uc-result">Faster approvals. Stronger client relationships.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POWERED BY -->
+  <div class="powered-by">
+    <div class="pb-left">
+      <strong>Powered by Eris Solutions</strong>
+      Brio's AI Solutions layer is built and managed by Eris Solutions — a data engineering firm specializing in AI-powered business intelligence for operations-driven industries.
+    </div>
+    <div class="pb-badge">
+      <div class="pb-dot"></div>
+      <span>Powered by <em>Eris Solutions</em></span>
+    </div>
+  </div>
+
+  <!-- AI CTA -->
+  <div class="ai-cta" id="ai-contact">
+    <div>
+      <h3>See it working on<br/>your real project data.</h3>
+      <p>Book a free 30-minute demo. We'll show you exactly what it would look like for your team — no technical setup required.</p>
+    </div>
+    <button class="btn-white" onclick="alert('Demo booking coming soon! Email us at info@gobriosolutions.com')">Book a free demo</button>
+  </div>
+
+</div><!-- /page-ai -->
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">BRIO <span>SOLUTIONS</span></div>
+  <p>&copy; 2025 Brio Solutions &middot; All rights reserved</p>
+  <a href="mailto:info@gobriosolutions.com">info@gobriosolutions.com</a>
+</footer>
+
+<script>
+  // Page switching
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    if (name === 'home') document.getElementById('nav-home').classList.add('active');
+    if (name === 'ai') document.getElementById('nav-ai').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function scrollToContact() {
+    showPage('home');
+    setTimeout(() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }), 100);
+  }
+
+  // Hero slider
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.dot');
+
+  function goSlide(n) {
+    slides[currentSlide].classList.remove('active');
+    dots[currentSlide].classList.remove('active');
+    currentSlide = n;
+    slides[currentSlide].classList.add('active');
+    dots[currentSlide].classList.add('active');
+  }
+
+  setInterval(() => goSlide((currentSlide + 1) % slides.length), 5000);
+</script>
+</body>
+</html>
